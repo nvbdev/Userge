@@ -175,6 +175,7 @@ async def _init():
 @userge.on_cmd("joinvc", about={
     'header': "Join Voice-Call",
     'usage': "{tr}joinvc"},
+    trigger=Config.SUDO_TRIGGER,
     allow_private=False)
 async def joinvc(msg: Message):
     """ join voice chat """
@@ -208,6 +209,7 @@ async def joinvc(msg: Message):
 @userge.on_cmd("leavevc", about={
     'header': "Leave Voice-Call",
     'usage': "{tr}leavevc"},
+    trigger=Config.SUDO_TRIGGER,
     allow_private=False)
 @vc_chat
 async def leavevc(msg: Message):
@@ -409,6 +411,7 @@ async def view_queue(msg: Message):
 @userge.on_cmd("volume", about={
     'header': "Set volume",
     'usage': "{tr}volume\n{tr}volume 69"},
+    trigger=Config.SUDO_TRIGGER,
     allow_private=False)
 @vc_chat
 async def set_volume(msg: Message):
@@ -680,8 +683,8 @@ def mp3_down(url: str):
         'postprocessors': [
             {
                 'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '320',
+                'preferredcodec': 'm4a',
+                'preferredquality': '512',
             },
             {'key': 'FFmpegMetadata'}
         ]
@@ -700,12 +703,12 @@ def mp3_down(url: str):
 
 @pool.run_in_thread
 def _transcode(input_: str) -> str:
-    output = "output.raw"
+    output = "output.wav"
     ffmpeg.input(input_).output(
         output,
-        format='s16le',
-        acodec='pcm_s16le',
-        ac=2, ar='48k'
+        format='s24le',
+        acodec='pcm_s24le',
+        ac=1, ar='48k'
     ).overwrite_output().run()
     return output
 
